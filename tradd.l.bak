@@ -1,0 +1,79 @@
+%option noyywrap
+%{
+	#include<stdio.h>
+        #include "y.tab.h"
+	#include<string.h>
+%}
+lettre [A-Za-z]
+digit [0-9]
+alphanum {lettre}|{digit}
+
+regularverbs ("ktb"|"eat"|"chrb"|"drink"|"3rf"|"know"|"l3b"|"play"|"rsm"|"draw"|"lbss"|"wear"|"ghssl"|"wash") 
+masculinsubject ("huwa"|"he"|"tricot"|"shirt"|"hamza"|"lma"|"water") 
+femininsubject ("hiya"|"she"|"ksswa"|"skirt"|"manal"|"tfa7a"|"apple") 
+pluralmasculinsubject ("homa"|"they"|"rjal"|"men"|"doross"|"lessons") 
+pluralfemininsubject ("homaa"|"they"|"chjrat"|"trees"|"tblat"|"7ikayat") 
+masculinadjectifs ("mzyan"|"good"|"khayb"|"bad"|"frнan"|"happy"|"mqllq"|"sad"|"nqi"|"clean"|"musskh"|"dirty"|"r9i9"|"small"|"mrid"|"sick")
+question ("chkoun"|"who"|"chno"|"what"|"achmn"|"fin"|"where"|"kifach"|"how"|"mnin"|"fromwhere"|"imta"|"when"|"3lach"|"why") 
+timeadverbs ("tnin"|"monday"|"tlat"|"tuesday"|"larb3"|"wednesday"|"khmiss"|"thursday"|"jm3a"|"friday"|"sbt"|"saturday"|"7d"|"sunday"|"lyum"|"today"|"chhr"|"month"|"3am"|"year") 
+presenttense ("dima"|"always"|"yawmiyan"|"daily"|"daba"|"now") 
+negadverbs ("walo"|"nothing")
+
+%%
+"ana"  return ANA;
+"nta"  return NTA; 
+"nti"  return NTI;
+"нna"  return HNA;
+"ntoma" return NTOMA;
+({masculinadjectifs}a) return ADJF; 
+({masculinadjectifs}in)  return ADJMP;
+({masculinadjectifs}at) return ADJFP;
+{regularverbs} return VERBR;
+{masculinsubject} return SUBM;
+{femininsubject} return SUBF;
+{pluralmasculinsubject} return SUBMP;
+{pluralfemininsubject} return SUBFP;
+{masculinadjectifs} return ADJ ;
+{question} return QUEST;
+{timeadverbs} return TADV;
+{presenttense} return PRADV;
+{negadverbs} return NADV;
+(ghadi(n{regularverbs})) {return ANAF;printf("yess");}  
+(ghadi(t{regularverbs})) return NTAF;
+(ghadi(t{regularverbs})i) return NTIFF; 
+(ghadi(y({regularverbs}))) return HOWAF;
+(ghadi(te({regularverbs}))) return HIYAF;
+(ghadi(n({regularverbs})o)) return HNAF;
+(ghadi(t({regularverbs})o)) return NTOMAF;
+(ghadi(y({regularverbs})o)) return HOMAF;
+(ma({regularverbs})tch) return  ANANTAN;
+(ma({regularverbs})tich) return HOWAN ;
+(ma({regularverbs})atch) return HIYAN ;
+(ma({regularverbs})nach) return HNAN ;
+(ma({regularverbs})toch) return NTOMAN ;
+(ma({regularverbs})och) return HOMAN ;
+kan{regularverbs} return ANAPR;
+kat{regularverbs} return NTAPR;
+(kat{regularverbs}i) return NTIPR;
+(kay({regularverbs})) return HOWAPR;
+(kate{regularverbs}) return HIYAPR;
+(kan({regularverbs})u) return HNAPR;
+(kat{regularverbs}u) return NTOMAPR;
+(kay({regularverbs})u) return HOMAPR;
+(({regularverbs})t) return ANAP;
+({regularverbs}ti) return NTAP;
+({regularverbs}at) return HIYAP;
+({regularverbs}na) return HNAP;
+({regularverbs}tu) return NTOMAP;
+({regularverbs}u) return HOMAP;
+({regularverbs}i) return IMPF;
+({regularverbs}o) return IMPP;
+("ghda"|"tomorrow"|(({timeadverbs})lijay)|"next"|(had({timeadverbs}|this))) return FADV;
+(({timeadverbs}lifat)|(dakl{timeadverbs})) return PADV;
+{digit}+  {yylval.ent = atoi(yytext); return NUM;}
+"."    return yytext[0];
+"?"  return PINTERO;
+","  return COMMA;
+"!"  return EXCL;
+
+%%
